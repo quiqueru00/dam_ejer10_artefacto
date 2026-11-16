@@ -1,0 +1,46 @@
+name: GitAction Ejercicio 10 test-artefacto
+
+on:
+  push:
+    #se ejecutaría solo al hacer push a la rama main
+    branches: [ main ]
+jobs:
+  calculadora:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Descargar repositorio  
+      uses: actions/checkout@v5
+    
+    - name: Configuración java
+      uses: actions/setup-java@v5
+      with:
+        distribution: temurin
+        java-version: '21'
+        
+    - name: Creación carpeta y compilación
+      run: |
+        mkdir -p out
+        javac -d out src/*.java
+        
+    - name: Ejecutar test
+      run: java -ea -cp out CalculadoraTest
+      
+    - name: Crear jar
+      run: java cfe out/calculadora.jar Main -C out .
+      
+    - name: Ejecutar calculadora.jar
+      run: java -jar out/calculadora.jar
+      
+    - name: Subir artefacto
+      uses: actions/upload-artifact@v5
+      with:
+        name: calculadora
+    
+    
+    
+    
+    
+    
+    
+    
+   
